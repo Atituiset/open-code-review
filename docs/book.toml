@@ -1,0 +1,32 @@
+[book]
+title        = "Open Code Review 源码级解读"
+authors      = ["Atituiset"]
+description  = "对 alibaba/open-code-review 仓的深度源码解读与落地指南"
+language     = "zh"
+src          = "src"
+multilingual = false
+
+[build]
+build-dir    = "book"
+create-missing = false
+
+[output.html]
+default-theme       = "navy"
+preferred-dark-theme = "navy"
+smart-punctuation   = true
+git-repository-url  = "https://github.com/alibaba/open-code-review"
+edit-url-template   = "https://github.com/alibaba/open-code-review/edit/main/docs/src/{path}"
+no-section-label    = false
+
+[output.html.search]
+enable            = true
+limit-results     = 30
+use-boolean-and   = true
+boost-title       = 2
+boost-hierarchy   = 1
+expand            = true
+heading-split-count = 4
+
+[output.html.fold]
+enable = true
+level  = 0

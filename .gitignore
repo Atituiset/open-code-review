@@ -44,3 +44,6 @@ bin/opencodereview
 # Python
 __pycache__/
 *.py[cod]
+
+# mdBook build output
+docs/book/
