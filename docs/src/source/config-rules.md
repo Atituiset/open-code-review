@@ -181,7 +181,7 @@ protocol 三态：`anthropic` / `openai` / `openai-responses`。
 
 `internal/config/allowlist/allowed_ext.go` 提供：
 
-- `IsAllowedExt(ext)`：82 个白名单扩展（`.go`/`.java`/`.py`/.../`.vue`/`.svelte`/`.astro`/`.tf`/.../.proto）。case-insensitive。
+- `IsAllowedExt(ext)`：80 个白名单扩展（`.go`/`.java`/`.py`/.../`.vue`/`.svelte`/`.astro`/`.tf`/.../.proto）。case-insensitive。
 - `IsExcludedPath(path)`：17 个排除 glob，主要针对**测试文件**：`**/*_test.go`、`**/src/test/java/**/*.java`、`**/*.test.{js,jsx,ts,tsx}`、`**/__tests__/**`、`**/*_test.py`、`**/*_spec.rb`、`**/*Test.java`、`**/oh_modules/**`（HarmonyOS）、...。
 
 `//go:embed supported_file_types.json` + `default_exclude_patterns.json` 进二进制。

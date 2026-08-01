@@ -129,7 +129,7 @@ default:       return tool.Of("Error: invalid task_done state")
 
 `ToolDefsByPhase(planOnly bool)` 按 `plan_task`/`main_task` 字段过滤，让 plan phase 只看到 `code_search`/`file_read_diff`/`file_find`（只读上下文），main phase 才看到 `task_done`/`code_comment`/`file_read`。
 
-这个 JSON 也是 `//go:embed` 进二进制的，但可以通过 `--tool-config <path>` 加载自定义版替换。这是 OCR 留给二次开发的少量扩展点之一。
+这个 JSON 也是 `//go:embed` 进二进制的，但可以通过 `--tools <path>` 加载自定义版替换。这是 OCR 留给二次开发的少量扩展点之一。
 
 ## 8.5 工具调用 token / 错误可见性
 

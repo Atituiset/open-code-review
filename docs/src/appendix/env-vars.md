@@ -10,7 +10,7 @@
 | `OCR_LLM_MODEL` | 默认模型名 | 同上 |
 | `OCR_LLM_PROTOCOL` | `anthropic`/`openai`/`openai-responses` | 同上 |
 | `OCR_LLM_AUTH_HEADER` | 认证 header 名 | 同上 |
-| `OCR_LLM_EXTRA_HEADERS` | 额外请求头 JSON | `llm/client.go` |
+| `OCR_LLM_EXTRA_HEADERS` | 额外请求头 JSON | `llm/resolver.go` |
 | `OCR_LLM_TIMEOUT` | 全局请求超时（秒） | `resolver.go` |
 | `OCR_USE_ANTHROPIC` | legacy：true 表示用 anthropic 协议 | `resolver.go` |
 | `OCR_LLM_USE_ANTHROPIC` | GitHub Action input 专用 | `action.yml` |

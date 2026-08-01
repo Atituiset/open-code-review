@@ -240,4 +240,4 @@ executeReview 收尾 (review_cmd.go:229)
 - **review_filter**：每文件 1 次 LLM 调用，~2-4s。
 - **并发 8** → 理论 50 文件 ÷ 8 × 单文件 ~15-40s ≈ **2-4 分钟**，加上 MCP 工具（若慢）可能到 5-10 分钟。
 
-预算建议：CI 里给 job 至少 **10-15 分钟 timeout**，配合 `--per-file-timeout`（如 5）防止单文件卡死。
+预算建议：CI 里给 job 至少 **10-15 分钟 timeout**，配合 `--timeout`（如 5）防止单文件卡死。

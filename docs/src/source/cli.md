@@ -24,7 +24,7 @@ func main() {
 注意三件事：
 1. **`llm.InitEmbeddedLoader()`** 把 BPE 词表（`internal/llm/bpe_data/*`）开机就加载进 tiktoken。这意味着 OCR 的 token 计数**不依赖联网下载**，离线可用。
 2. **`telemetry.Init`** 静默读 `~/.opencodereview/config.json` 的 `telemetry.enabled` 与 `OCR_ENABLE_TELEMETRY=1`；不开就什么都不做。
-3. `Version`/`GitCommit`/`BuildDate` 是 ldflags 注入的包级变量（`cmd/opencodereview/version.go`），Makefile 里通过 `-X main.Version=...` 别给 `cmd/opencodereview`？——其实注入给的是 `cmd/opencodereview.Version`，再被 `llm.AppVersion` 引用作为 User-Agent。
+3. `Version`/`GitCommit`/`BuildDate` 是 ldflags 注入的包级变量（`cmd/opencodereview/version.go`），Makefile 里通过 `-X main.Version=...` 注入到 `cmd/opencodereview.Version`，再被 `llm.AppVersion` 引用作为 User-Agent。
 
 ## 4.2 命令树（Cobra）
 
@@ -37,9 +37,9 @@ func main() {
 | `ocr delegate` | `delegate_cmd.go:29` | 委派模式（含 `preview`/`rule` 子子命令）|
 | `ocr session` | `session_cmd.go` | `list`/`show`/`remove` 子命令 |
 | `ocr viewer` | `viewer_cmd.go` | 启动会话 Web 回看 |
-| `ocr config` | `config_cmd.go` | `set`/`get` 管理 `~/.opencodereview/config.json` |
-| `ocr provider` (alias of `config provider`) | `provider_cmd.go` + `provider_tui.go` | bubbletea 交互式选 provider/model 并测连 |
-| `ocr llm test` | `llm_cmd.go` | 跑 `testconnection/task.json` 的简单对话验证连通性 |
+| `ocr config` | `config_cmd.go` | `set`/`unset`/`provider`/`model` 管理 `~/.opencodereview/config.json` |
+| `ocr config provider` | `provider_cmd.go` + `provider_tui.go` | bubbletea 交互式选 provider/model 并测连（无顶层 `ocr provider`） |
+| `ocr llm test` / `ocr llm providers` | `llm_cmd.go` | 连通性测试 / 列出内置 provider |
 | `ocr rules check` | `rules_cmd.go` | 校验规则文件覆盖度 |
 
 ## 4.3 共享前置：`loadCommonContext`

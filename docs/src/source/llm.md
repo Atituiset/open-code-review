@@ -1,6 +1,6 @@
 # 5. LLM 客户端与多协议抽象
 
-`internal/llm/` 是 OCR 的"网卡层"：它把三家协议、HTTP 细节、token 计算、缓存控制、SDK 错误重试都收敛在一个接口 `LLMClient` 后面，让上层 `llmloop.Runner` 完全不必关心 San Кабыт这样的协议差异。
+`internal/llm/` 是 OCR 的"网卡层"：它把三家协议、HTTP 细节、token 计算、缓存控制、SDK 错误重试都收敛在一个接口 `LLMClient` 后面，让上层 `llmloop.Runner` 完全不必关心不同 SDK 的协议差异。
 
 ## 5.1 一图看懂三层
 

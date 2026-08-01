@@ -37,9 +37,7 @@ ocr review --path ... # review 不支持 --path，用 exclude 或跑 scan --path
 ### 3. 控制工具调用膨胀
 
 - `MAX_TOOL_REQUEST_TIMES` 默认 30 次/文件。工具滥用多的模型（较弱的模型更容易疯狂调 `file_read`/`code_search`）会烧 token。
-  ```bash
-  ocr review --max-tools 15   # 收紧
-  ```
+  注意 `--max-tools` **只能上抬**（`shared.go:54`：`maxTools > 模板值` 才生效），**不能收紧**；要压低轮数得改 `tools.json`/模板。
 - 换更强的模型通常**少调工具**（一次 code_search 顶十次 file_read）。
 - 在规则/background 里提醒"避免重复调用同一工具"（`scan_template.json` 的 MAIN_TASK 就显式这么写）。
 
@@ -73,7 +71,7 @@ DeepSeek-R1 / o1 系 if 默认开 thinking，review 里思考 token 可能翻倍
 
 ```bash
 ocr review --concurrency 8        # 默认；网关限速时降 2-4
-ocr review --per-file-timeout 5   # 单文件超时兜底
+ocr review --timeout 5            # 单文件子任务超时兜底（分钟，默认 10）
 ```
 
 ### 延迟关键路径
@@ -115,8 +113,8 @@ OCR_ENABLE_TELEMETRY=1 + OTLP → Prometheus 看 ocr.llm.tokens_used by model
 ## 33.6 结论性配方
 
 ```
-稳定优先（CI 门槛）：  锁版本 + fetch-depth:0 + --audience agent + 并发4 + per-file-timeout 5 + max-tokens-budget
+稳定优先（CI 门槛）：  锁版本 + fetch-depth:0 + --audience agent + 并发4 + --timeout 5 + max-tokens-budget
                       + route_severity_below high（评论分流）+ incremental
-性价比优先（本地）：  强模型 + prompt cache（Anthropic）+ 规则聚焦 + max-tools 15-20
-成本极敏：            弱模型 + --max-tools 收紧 + 关 thinking + 缩小范围 + delegate 复用宿主 LLM
+性价比优先（本地）：  强模型 + prompt cache（Anthropic）+ 规则聚焦 + 工具轮数保持默认
+成本极敏：            弱模型 + 关 thinking + 缩小范围 + delegate 复用宿主 LLM（`--max-tools` 只能上抬不能收紧）
 ```

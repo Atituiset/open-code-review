@@ -96,7 +96,7 @@ MCP 工具也会被注册进同一个 `tool.Registry`（`mcp.RegisterAll`），�
 | OpenAI SDK 重试 | 5 次 | `llm/client.go:314 openaiopt.WithMaxRetries(5)` |
 | MCP 初始化超时 | 30s | `review_cmd.go:360/397` |
 | MCP setup 超时 | 5 分钟 | `review_cmd.go:378` |
-| 单文件子任务超时 | `--per-file-timeout`（默认 0=无限）| `agent.go:403` |
+| 单文件子任务超时 | `--timeout`（默认 10，0=无限）| `agent.go:403` |
 
 ## 3.8 三种 LLM 协议
 

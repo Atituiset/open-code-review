@@ -114,8 +114,8 @@ ocr review --background-file ./docs/req.md     # 或从文件读
 
 # 性能/成本
 ocr review --concurrency 4                   # 并发文件数（默认8）
-ocr review --per-file-timeout 5              # 单文件超时（分钟）
-ocr review --max-tools 50                    # 提升每文件工具调用上限（默认30）
+ocr review --timeout 5                       # 单文件超时（分钟，默认10，0=无限）
+ocr review --max-tools 50                    # 提升每文件工具调用上限（0=模板默认30）
 ocr review --max-tokens-budget 2000000       # 全局 token 预算
 
 # 输出

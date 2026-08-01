@@ -15,7 +15,7 @@ OCR 会把被审代码（diff 全文、file_read 读取的内容）发送给 LLM
 ### 必须做的
 
 1. **评估 LLM 服务商的隐私条款**：代码会出境到第三方。涉密/合规项目需内网网关（`custom_providers` 指向内网 LLM）或 `OCR_LLM_URL` 指向私有推理平台。
-2. **`config.json` 的 key 别泄露**：`ocr config get` 可能明文输出 key（源码未做脱敏显示），别贴到公共频道。
+2. **`config.json` 的 key 别泄露**：key 在 `~/.opencodereview/config.json` 明文存放（无脱敏），别贴到公共频道。
 3. **session JSONL 别上传共享盘**：`0600` 权限在个人 home 下有效；打包/备份到共享存储时风险扩散。
 4. **CI secrets**：`llm_auth_token` 等走 GitHub Secrets / GitLab CI Variables，别写进 workflow 明文。
 5. **MCP server 认证**：remote MCP 的 header 走 `$ENV_VAR` 展开（`client.go:73`），空值会报错——这防止"忘了配 token 静默发送"。

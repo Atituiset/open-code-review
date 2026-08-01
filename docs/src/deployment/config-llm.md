@@ -5,7 +5,7 @@
 | 入口 | 命令/文件 | 适用 |
 |------|----------|------|
 | 交互式 | `ocr config provider` → 选 provider → 选 model → 输 key → 自动测连 | 个人首次配置 |
-| CLI | `ocr config set provider=...` / `ocr config set model=...` 等 | CI / 脚本化 |
+| CLI | `ocr config set provider anthropic` / `ocr config set model <name>` 等（空格分隔，点分路径） | CI / 脚本化 |
 | 环境变量 | `OCR_LLM_URL` + `OCR_LLM_TOKEN` + `OCR_LLM_MODEL` | CI / 容器，避免写 key 到文件 |
 
 配置文件最终落在 `~/.opencodereview/config.json`。
@@ -69,11 +69,11 @@ export OCR_LLM_TIMEOUT="300"              # 秒，全局覆盖
 ## 23.5 自定义 provider（网关/内网/推理平台）
 
 ```bash
-ocr config set custom_providers.mycompany.url="https://llm.internal.company.com/v1"
-ocr config set custom_providers.mycompany.protocol="openai"
-ocr config set custom_providers.mycompany.api_key="sk-..."
-ocr config set custom_providers.mycompany.model="my-llm-7b"
-ocr config set provider="mycompany"
+ocr config set custom_providers.mycompany.url "https://llm.internal.company.com/v1"
+ocr config set custom_providers.mycompany.protocol "openai"
+ocr config set custom_providers.mycompany.api_key "sk-..."
+ocr config set custom_providers.mycompany.model "my-llm-7b"
+ocr config set provider "mycompany"
 ```
 
 `CustomProviders` 要求 `url` + `protocol`（相比 `Providers` 只覆盖预设字段，它完全是新的）。
@@ -103,7 +103,11 @@ ocr config set language "English"
 
 ```bash
 ocr llm test                # 连通性 + 模型回答
-ocr config get              # 看当前生效配置（会脱敏 key？—— 注意：get 可能明文输出，别贴到公共频道）
+```
+
+> 没有 `ocr config get` 子命令。想核对当前生效配置：直接看
+> `~/.opencodereview/config.json`（key 明文存放，别贴到公共频道），或用
+> `ocr llm test` 确认最终 resolve 到哪个 endpoint。
 ```
 
 ## 23.9 常见坑

@@ -130,7 +130,7 @@ steps:
     run: |
       ocr review --from origin/$BASE_REF --to $HEAD_SHA \
         --format json --audience agent \
-        --concurrency 8 --per-file-timeout 5 \
+        --concurrency 8 --timeout 5 \
         > /tmp/ocr-result.json || echo "OCR_EXIT=$?" >> "$GITHUB_ENV"
       cat /tmp/ocr-result.json
 

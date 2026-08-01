@@ -69,9 +69,9 @@ open-code-review/
 │   │   ├── rules/                   system_rules.go + system_rules.json + rule_docs/*.md
 │   │   ├── allowlist/               allowed_ext.go + supported_file_types.json + default_exclude_patterns.json
 │   │   ├── template/                template.go + task_template.json + scan_template.json
-│   │   │   ├── prompts/*.md         10 个 diff-review prompt
-│   │   │   ├── toolsconfig/tools.json
-│   │   │   └── testconnection/task.json
+│   │   │   └── prompts/*.md         10 个 diff-review prompt
+│   │   ├── toolsconfig/             tools.json + toolsconfig.go
+│   │   └── testconnection/          task.json（ocr llm test 用）
 │   ├── mcp/                         MCP 客户端（stdio/remote）+ RegisterAll
 │   ├── viewer/                      viewer Web 服务 + hostguard
 │   ├── telemetry/                   OTel（config/provider/exporter/metrics/span/events/shutdown）

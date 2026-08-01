@@ -13,10 +13,10 @@
 
 **排查步骤**：
 1. `ocr llm test` —— 最快定位是配置错还是网络错。
-2. 确认协议：`ocr config get` 看 `protocol`，网关只认 openai 就别配 anthropic。
+2. 确认协议：看 `~/.opencodereview/config.json` 的 `protocol` 字段，网关只认 openai 就别配 anthropic。
 3. 确认 URL：`openai` client 会自动拼 `/chat/completions`，`anthropic` 拼 `/v1/messages`。手动 curl 网关对比。
 4. 看 session JSONL 的 `llm_error` 记录（`ocr viewer` 或 grep JSONL），里面是 SDK 原始 error。
-5. 检查网关限流/超时：`OCR_LLM_TIMEOUT`（秒）全局覆盖，`--per-file-timeout` 是每文件总超时（分钟）。
+5. 检查网关限流/超时：`OCR_LLM_TIMEOUT`（秒）全局覆盖，`--timeout` 是每文件子任务超时（分钟，默认 10，0=无限）。
 
 **根因参考**：
 - 并发 8 文件 × 每文件多轮 → 瞬时请求密集，网关 429 → SDK 重试 5 次仍失败。
@@ -72,7 +72,7 @@
 
 ### 审到一半像卡死
 
-- 单文件 LLM 调用本身 5 分钟超时（SDK 默认），但整文件无超时（`--per-file-timeout` 默认 0）。**CI 必须设 `--per-file-timeout 5`**。
+- 单文件 LLM 调用本身 5 分钟超时（SDK 默认）；整文件子任务默认 10 分钟超时（`--timeout`，0=无限）。**CI 建议设 `--timeout 5-10` 兜底**。
 - 工具调用同步路径（非 code_comment）：`file_read`/`code_search` 卡在 git 子进程？`gitcmd.Runner` semaphore 16 并发，`code_search` 的 `git grep` 大仓可能慢。
 - MCP 工具慢会拖主循环。
 
@@ -99,7 +99,7 @@ TraceID 打印逻辑在 `telemetry.IsEnabled()` 才打印（`review_cmd.go:200`�
 
 ## 35.7 viewer 打不开 / 403
 
-- `ocr viewer --addr 127.0.0.1:8765` 后浏览器访问其它 host（如 `localhost` 别名）可能 403：Host 守卫白名单默认 `127.0.0.1`/`localhost`。若自定义域名需配 `OCR_VIEWER_HOST` 类 env（看 `hostguard.go` 实现）。
+- `ocr viewer --addr 127.0.0.1:8765` 后浏览器访问其它 host（如 `localhost` 别名）可能 403：Host 守卫白名单默认 loopback（`localhost`/`127.0.0.1`/`::1`）。若绑非 loopback 地址或自定义域名需配 `OCR_VIEWER_ALLOWED_HOSTS`（看 `hostguard.go` 实现）。
 - session 目录不存在 → 没有 session 可看，先跑一次 review。
 
 ## 35.8 二次开发调试技巧

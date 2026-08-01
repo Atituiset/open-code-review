@@ -33,7 +33,7 @@
 也就是：**viewer 暴露的 JSONL 里含被审源码和 LLM 分析**。任何恶意网页如果能把浏览器定向到 `127.0.0.1`（DNS rebinding 攻击），就可以跨域读到这些数据。
 
 `hostGuard`（`hostguard.go`）实现：
-- 从 `addr` 推导允许的 Host（默认 `127.0.0.1` / `localhost`，可加 `OCR_VIEWER_HOST` 等环境变量扩展）。
+- 从 `addr` 推导允许的 Host（默认 loopback：`localhost` / `127.0.0.1` / `::1`，可用 `OCR_VIEWER_ALLOWED_HOSTS` 环境变量扩展）。
 - 所有请求先检查 `Host` header 是否在 allowlist；不在直接 403。
 
 这是 OCR 对"本地端口服务"这类攻击面难得的认真处理。
@@ -51,7 +51,7 @@
 ## 16.5 用法
 
 ```bash
-ocr viewer            # 默认 127.0.0.1:0（随机端口）
+ocr viewer            # 默认 localhost:5483
 ocr viewer --addr 127.0.0.1:8765
 ```
 

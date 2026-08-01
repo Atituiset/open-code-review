@@ -35,7 +35,7 @@
 - [ ] **评论区限流**：100+ 评论一次贴可能被平台限流。用 `route_severity_below` / `incremental` / `review_comment_batch_size`。
 - [ ] **fork PR secrets**：`pull_request_target` 用 repo secrets，但 head 代码不可信。OCR 只读 diff，post-review 脚本别信任 head 内容。
 - [ ] **`thinking` 模型爆 token**：默认 thinking 的模型在 review 里可能消费翻倍。`llm.extra_body: {"thinking":{"type":"disabled"}}`。
-- [ ] **超时**：大 PR 默认无单文件超时（`--per-file-timeout` 默认 0）。CI 里设 5-10 分钟/文件 + job 15 分钟。
+- [ ] **超时**：单文件子任务默认超时 10 分钟（`--timeout`，0=无限）。CI 里设 5-10 分钟/文件 + job 15 分钟。
 - [ ] **token 预算失控**：工具调用会膨胀 context（#409 实测 ~300×）。设 `--max-tokens-budget` 兜底，接受 `budget_exceeded` 状态的 partial 结果。
 
 ## 32.5 断点续审

@@ -3,7 +3,7 @@
 ## A
 
 - **Agent**：本文档指 OCR 内嵌的"LLM 工具调用 Agent"（每文件一个子 Agent 实例），也泛指 Claude Code 等宿主编程代理。
-- **allowlist（白名单）**：`supported_file_types.json` 的 82 个扩展名；文件扩展名不在其内则默认不审。
+- **allowlist（白名单）**：`supported_file_types.json` 的 80 个扩展名；文件扩展名不在其内则默认不审。
 
 ## B
 
