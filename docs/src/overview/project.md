@@ -1,5 +1,7 @@
 # 1. 项目定位与设计哲学
 
+> 定位：**全水平** ｜ 建立「确定性工程 × Agent 混合」的心智模型，两类读者都从这里开始。
+
 ## 1.1 一句话定位
 
 **OpenCodeReview（OCR）是一个 AI 驱动的命令行代码审查助手**：它读 Git diff（或整文件），把变更文件分流给一个**有工具调用能力**的 LLM Agent，产出结构化、带行级精度的审查意见。和"裸的 Claude Code + 一个 review skill"相比，OCR 用**确定性工程的第一性约束**把审查过程关键步骤焊死，只为 LLM 留下"动态判断"这一段自由度。
@@ -22,7 +24,7 @@
 
 | 工程手段 | 代码落点 | 它保证什么 |
 |---------|---------|----------|
-| 精确文件选择 | `internal/agent/agent.go` `filterDiffs` / `whyExcluded` | 该审的必审、不该审的不浪费 |
+| 精确文件选择 | `internal/agent/agent.go` `filterDiffs` / `preview.go` `whyExcluded` | 该审的必审、不该审的不浪费 |
 | 智能打包（分治）| `internal/agent/agent.go` `dispatchSubtasks` 整体架构 | 大变更集稳定 + 天然并发 |
 | 规则匹配（模板引擎，而非自然语言）| `internal/config/rules/system_rules.go` `Resolver` | 给模型聚焦的检查清单 |
 | 行号定位（外置模块）| `internal/diff/resolver.go` `ResolveComment` | 反馈位置根本不会飘 |
@@ -61,7 +63,7 @@ OCR 自建了一个 benchmark：50 个开源仓 + 200 个真实 PR + 10 种语�
 在解读后续代码时请始终记住这几条**事实**，它们会反复解释为什么某处代码写得这么"工程化"：
 
 - `ocr` 是**单进程 Go 二进制**，所有 prompt、规则、工具 schema 都 `//go:embed` 进二进制，运行期不需要外部 prompt 文件。
-- 主循环是**同步阻塞、多轮**的（per-file 一个 `llmloop.Runner.RunPerFile`），不是流式；Anthropic/OpenAI 都用 SDK 非流式调用，只有 OpenAI 兼容协议可在 `extra_body.stream=true` 时走流式（`internal/llm/client.go:351`）。
+- 主循环是**同步阻塞、多轮**的（per-file 一个 `llmloop.Runner.RunPerFile`），不是流式；Anthropic/OpenAI 都用 SDK 非流式调用，只有 OpenAI 兼容协议可在 `extra_body.stream=true` 时走流式（`internal/llm/client.go:352`）。
 - 文件之间**串行调度但文件内并行 LLM 评论收集**（通过 `CommentWorkerPool`，详见第 7 章）。
 - reviewer 默认每文件最多 30 次工具调用（`task_template.json` 的 `MAX_TOOL_REQUEST_TIMES`），scan 模式 60 次。
 - 一切会话都被记到 `~/.opencodereview/sessions/<repo>/<sess-id>.jsonl`，可断点续审、可 Web 回看。

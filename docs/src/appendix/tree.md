@@ -1,5 +1,7 @@
 # A. 文件树速查
 
+> 定位：**全水平（速查）** ｜ 看懂代码从哪里开始的核心文件树。
+
 按"看懂代码从哪里开始"组织的核心文件树（去掉测试与翻译冗余）。
 
 ```
@@ -10,9 +12,9 @@ open-code-review/
 │   ├── review_cmd.go                ocr review：装配链 + MCP 初始化 + agent 启动
 │   ├── scan_cmd.go                  ocr scan：scan 模板 + scan.Agent 启动
 │   ├── delegate_cmd.go              ocr delegate preview/rule（无 LLM）
-│   ├── session_cmd.go               ocr session list/show/remove
+│   ├── session_cmd.go               ocr session list/show
 │   ├── viewer_cmd.go                ocr viewer
-│   ├── config_cmd.go                ocr config set/get（~/.opencodereview/config.json）
+│   ├── config_cmd.go                ocr config set/unset/provider/model（无 get 子命令）
 │   ├── provider_cmd.go / provider_tui.go   ocr config provider（bubbletea TUI）
 │   ├── llm_cmd.go                   ocr llm test（连通性）
 │   ├── rules_cmd.go                 ocr rules check
@@ -23,8 +25,9 @@ open-code-review/
 ├── internal/
 │   ├── agent/                       ★ diff-review 编排
 │   │   ├── agent.go                 Agent.Run / dispatchSubtasks / executeSubtask / review_filter
-│   │   ├── preview.go               --preview 文件列表
-│   │   └── estimate.go              token 成本估算
+│   │   ├── preview.go               --preview 文件列表 + whyExcluded 过滤
+│   │   ├── estimate.go              token 成本估算
+│   │   └── util.go                  stripEmptyPlanBlock / buildMessageXML / detectGitBranch
 │   ├── scan/                        ★ 全文件审查
 │   │   ├── agent.go                 ScanAgent.Run / batch dispatch / dedup / summary
 │   │   ├── provider.go              文件枚举（git ls-files / WalkDir）
@@ -64,7 +67,7 @@ open-code-review/
 │   │   ├── persist.go               jsonlWriter
 │   │   ├── history.go               SessionHistory
 │   │   ├── resume.go                ResumeState（fingerprint 索引）
-│   │   └── list.go                  session list/show/remove
+│   │   └── list.go                  session list/show
 │   ├── config/
 │   │   ├── rules/                   system_rules.go + system_rules.json + rule_docs/*.md
 │   │   ├── allowlist/               allowed_ext.go + supported_file_types.json + default_exclude_patterns.json

@@ -1,5 +1,7 @@
 # 10. scan：全文件审查管线
 
+> 定位：**进阶级** ｜ `ocr scan` 顶层编排：枚举 → 过滤 → 分批 → dedup → 项目摘要。
+
 `internal/scan/` 是 `ocr scan` 的实现。和 `ocr review` 的根本区别是 **没有 diff**——它把整文件作输入让 LLM 全文审，适合"审陌生仓 / 审应该走的重构目录"。但我们将在本章看到它和 `agent` 共享 `llmloop.Runner`，证明第 7 章那个抽象的可复用性。
 
 ## 10.1 文件清单
@@ -43,8 +45,8 @@ DiffLookup: a.lookupDiff,  // 返回合成 Diff，让 code_comment 复用 resolv
    └─ 否则 filepath.WalkDir + 加载 .gitignore + ExcludedDirs 黑名单
 
 2. injectScanContentMap
-   把所有 file 内容 map[path]content 灌给 file_read_diff 工具
-   （即使 scan 没有 diff，模型若调该工具也能拿到整文件）
+   把所有 file 内容 map[path]content 灌给 file_read_diff 工具（防御性：scan 下
+   file_read_diff 已被 scan_cmd.go:144 从 MainToolDefs 剔除，模型实际看不到该工具）
 
 3. filterScanItems → filterLargeScans
    ─ binary 跳过

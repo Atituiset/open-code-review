@@ -1,5 +1,7 @@
 # 29. Session Viewer 与断点续审
 
+> 定位：**入门级** ｜ 回看会话 + `--resume` 续审的落地用法。
+
 本章把"回看会话"和"续审"两个能力串起来，给出落地用法。
 
 ## 29.1 会话存储
@@ -27,8 +29,9 @@ ocr session list
 
 ```bash
 ocr session show <session-id>      # 看单会话详情
-ocr session remove <session-id>    # 删除
 ```
+
+> 注意：当前 CLI **没有** `ocr session remove` 子命令。清理旧会话需直接删除 `~/.opencodereview/sessions/<repo>/<id>.jsonl` 文件。
 
 ## 29.3 Web Viewer
 
@@ -83,7 +86,7 @@ ocr review --from main --to feature --resume 8f3a...
 | CI 审完后想看行为 | `ocr viewer` 或 session list |
 | 评估新模型/新规则 | 同 PR 两次 session 对比 |
 | 追 review 漏报 | viewer 里看 Main loop tool_call |
-| 磁盘清理 | `ocr session remove <id>` 或删 JSONL |
+| 磁盘清理 | 直接删除 JSONL 文件（无 `session remove` 子命令） |
 
 ## 29.6 坑点
 

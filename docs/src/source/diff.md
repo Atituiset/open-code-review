@@ -1,5 +1,7 @@
 # 9. diff：Git diff 解析、行号定位与重定位
 
+> 定位：**进阶级** ｜ 「评论不飘」的核心工程：解析 diff + 四层行号定位防御。
+
 `internal/diff/` 是 OCR 的"必备基础设施"：解析 git diff 文本、定位代码评论在 diff 里的行号、兜底重定位、gitignore 处理、工作树读取。它是源码级和落地级都极重要的一个包，因为它直接决定了——**用户拿到的评论能不能挂在对的代码行上**。
 
 ## 9.1 文件清单
@@ -32,7 +34,7 @@ func NewProvider(repoDir, from, to, runner) *Provider // merge-base(from,to)..to
 | commit | `git show --find-renames -U3 <commit>` |
 | range | `git diff -U3 --find-renames mergeBase <to> --` |
 
-公共 flag：`--no-ext-diff`（禁外部 diff 驱动，避免 tokenizable），`--no-textconv`（不下二进制），`--src-prefix=a/ --dst-prefix=b/`（保证 diff 头格式统一），`--no-color`，`-U3`（3 行上下文，`DiffContextLines=18`）。
+公共 flag：`--no-ext-diff`（禁外部 diff 驱动，避免 tokenizable），`--no-textconv`（不下二进制），`--src-prefix=a/ --dst-prefix=b/`（保证 diff 头格式统一），`--no-color`，`-U3`（3 行上下文，`DiffContextLines=3`，`git.go:18`）。
 
 `--end-of-options` 在每个 ref 前用，是 #112 安全修复的一部分——避免 ref 像 `--upload-pack=...` 一样被解释成选项。
 
@@ -86,7 +88,7 @@ target/ .happypack/ .cachefile/ _packages/ rpm/ pkgs/
 
 ### 9.3.3 `ResolveComment` 在 llmloop 中的作用
 
-每条 `code_comment` 调用触发一次 `diff.ResolveComment(cm, d)`（`llmloop.go:375`）。如果两条路径都不命中：
+每条 `code_comment` 调用触发一次 `diff.ResolveComment(cm, d)`（`loop.go:375`）。如果两条路径都不命中：
 
 - 配置了 `ReLocationTask` → 触发 `ReLocateComment`（下一节）
 - 否则 `cm` 没有 `StartLine/EndLine`，在 `emitRunResult` 里的 `ResolveLineNumbers` 还会再试一次（如果 diff 没动过），但基本会以 0 行号返回——可能被前端 UI 弃或标"line N/A"

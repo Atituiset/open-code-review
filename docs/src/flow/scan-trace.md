@@ -1,5 +1,7 @@
 # 20. `ocr scan` 全链路时序
 
+> 定位：**进阶级** ｜ scan 的端到端追踪，对比 review 的差异点。
+
 scan 与 review 共享 `llmloop.Runner`，但顶层完全不同：它枚举文件而非解析 diff，分批处理且有 dedup / 项目摘要两个 review 没有的阶段。
 
 ## 20.1 命令初始化

@@ -1,5 +1,7 @@
 # 7. llmloop：LLM 工具调用循环与上下文压缩
 
+> 定位：**进阶级（核心必读）** ｜ 两个模式的共用内核，理解 `RunPerFile` 就理解了 OCR 一半。
+
 `internal/llmloop/` 是整仓最"核心"的包。它定义了**单个文件审查的 LLM 多轮工具调用循环**，被 `internal/agent`（diff-review）和 `internal/scan`（full-scan）共用，是 OCR 性能、稳定性、上下文管理的真正枢纽。
 
 理解 `llmloop/loop.go:149 RunPerFile` 这一函数 + `compression.go` 的三区压缩 + `pool.go` 的评论 worker pool，就理解了 OCR 一半。

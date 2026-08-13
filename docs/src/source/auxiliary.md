@@ -1,5 +1,7 @@
 # 18. 辅助包：gitcmd / model / pathutil / stdout / suggestdiff / release
 
+> 定位：**进阶级** ｜ 薄而专一的地基工具层，二次开发复用的入口。
+
 这些小包构成 OCR 的地基工具层。逐个过一遍，然后你就会发现它们都很小、很专一——这也是 Go 项目该有的样子。
 
 ## 18.1 `internal/gitcmd` — git 子进程并发限流器
@@ -32,7 +34,7 @@ func (r *Runner) Stream(ctx, repoDir, consume func(io.Reader) error, args...) er
 - `scan.go`：`ScanItem`（Path/Content/IsBinary/LineCount）+ `AsDiff()` 合成 Diff 方法。
 - `preview.go`：`DiffPreview` / `ScanPreview`。
 
-`ExcludeReason` 枚举值：`ExcludeNone / ExcludeUserRule / ExcludeExtension / ExcludeDefaultPath / ExcludeBinary`。
+`ExcludeReason` 枚举值（`model/preview.go`）：`ExcludeNone / ExcludeUserRule / ExcludeExtension / ExcludeDefaultPath / ExcludeDeleted / ExcludeBinary`。
 
 ## 18.3 `internal/pathutil` — 跨平台路径
 

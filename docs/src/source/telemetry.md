@@ -1,5 +1,7 @@
 # 17. telemetry：OpenTelemetry 可观测性
 
+> 定位：**进阶级** ｜ OTel SDK 的 metrics/spans/events 与配置优先级。
+
 `internal/telemetry/` 是 OCR 的可观测性层，基于 OpenTelemetry Go SDK。它记录 metrics、traces、spans、事件，支持 console 输出和 OTLP 导出。**默认完全关闭**，要显式开。
 
 ## 17.1 文件清单

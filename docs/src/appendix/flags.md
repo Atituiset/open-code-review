@@ -1,5 +1,7 @@
 # C. CLI 标志总览
 
+> 定位：**全水平（速查）** ｜ 以 `cmd/opencodereview/*.go` 的 Cobra 注册为准。
+
 > 本表以 `cmd/opencodereview/*.go` 的 Cobra 注册为准（`shared_flags.go` 为公共 flag 工厂）。
 > 注意：CLI 默认值是 flag 层面的值；部分 flag（如 `--max-tools`、`--batch`）为 0/空时
 > 实际走模板默认（diff 30 / scan 60、scan batch `by-language`）。
@@ -76,9 +78,10 @@
 
 | 子命令 | 说明 |
 |--------|------|
-| `ocr session list` | 列会话（`--repo` / `--json` / `--limit <n>`，默认 20） |
+| `ocr session list` | 列会话（`--repo` / `--json` / `--limit <n>`，默认 20；别名 `ls`） |
 | `ocr session show <id>` | 会话详情（`--repo` / `--json`） |
-| `ocr session remove <id>` | 删除会话 |
+
+> 当前**没有** `ocr session remove` 子命令（只有 `list`/`show`）；清理会话直接删除 JSONL 文件。
 
 ## C.7 `ocr viewer`
 

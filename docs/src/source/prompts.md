@@ -1,5 +1,7 @@
 # 14. prompt 模板：提示词工程内幕
 
+> 定位：**进阶级** ｜ 每张 prompt 拆解 + 占位符语法 + 定制入口。
+
 `internal/config/template/prompts/` 和 `scan_template.json` 内联文本是 OCR 提示词工程的实物。本章把每张提示词拆开看，让你理解 OCR 是怎么"对 prompt 进行工程化"的。
 
 ## 14.1 占位符语法

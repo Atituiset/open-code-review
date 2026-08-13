@@ -1,5 +1,7 @@
 # 13. config & rules：配置体系与规则匹配
 
+> 定位：**进阶级** ｜ 规则匹配器、配置解析、provider 预设与 allowlist 的实现细节。
+
 `internal/config/` 是 OCR 的运行期"基因库"。一切 prompt、规则、工具 schema、provider preset 都通过 `//go:embed` 进二进制；用户可覆盖的部分，分多个层级叠加到一起。本章给一份源码级的规则匹配器与配置解析器剖析。
 
 ## 13.1 目录与文件一览
@@ -8,12 +10,12 @@
 internal/config/
 ├── rules/
 │   ├── system_rules.go      ← Resolver 接口 + composedResolver + LoadDefault
-│   ├── system_rules.json    ← path_rule_map (32 模式)
-│   ├── rule_docs/*.md       ← 33 个语言/技术专属规则文本
+│   ├── system_rules.json    ← path_rule_map (31 模式)
+│   ├── rule_docs/*.md       ← 32 个语言/技术专属规则文本（含 default.md）
 │   └── *_test.go
 ├── allowlist/
 │   ├── allowed_ext.go       ← IsAllowedExt / IsExcludedPath
-│   ├── supported_file_types.json   ← 82 扩展名
+│   ├── supported_file_types.json   ← 80 扩展名
 │   └── default_exclude_patterns.json  ← 17 排除 globs
 └── template/
     ├── template.go          ← TaskTemplate / ScanTemplate 解析 + Validate + ApplyLanguage
@@ -150,7 +152,7 @@ protocol 三态：`anthropic` / `openai` / `openai-responses`。
 
 `LoadDefault`（`system_rules.go:87`）把每个 path 的 `<file>.md` filename 替换成 `rule_docs/<file>` 的实际文本内容。这一步通过 `//go:embed rule_docs/*` 在编译时嵌入，运行期不读盘。
 
-### 32 个 path pattern 概览
+### 31 个 path pattern 概览
 
 - 主流语言：`**/*.go`、`**/*.java`、`**/*.py`、`**/*.rs`、`**/*.{kt}`
 - TS/JS：`**/*.{ts,js,tsx,jsx}`

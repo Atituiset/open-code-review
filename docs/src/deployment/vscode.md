@@ -1,5 +1,7 @@
 # 28. VS Code 扩展
 
+> 定位：**入门级** ｜ GUI 前端 + 命令清单 + 坑点。
+
 `extensions/vscode/` 是 OCR 的 GUI 前端：**Preact WebView + 薄 Extension Host**，底层仍然是 `ocr` CLI。它把 review 结果渲染成侧边栏卡片 + 原生 CommentThreads。
 
 ## 28.1 基本信息

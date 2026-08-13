@@ -1,5 +1,7 @@
 # 26. CI/CD 集成（GitHub Actions / GitLab / Gerrit 等）
 
+> 定位：**入门级** ｜ 6 平台示例 + 统一模式 + 安全细节 + 坑点。
+
 OCR 官方提供了完整的多平台 CI 集成，全部遵循同一个模式：**用 npm 装 `ocr` → 配 LLM（env 或 config set）→ `ocr review --format json --audience agent` → 用脚本把 JSON 翻译成平台评论**。
 
 ## 26.1 统一模式

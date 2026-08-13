@@ -1,5 +1,7 @@
 # 6. Agent 编排层（diff-review）
 
+> 定位：**进阶级** ｜ `ocr review` 的顶层指挥官：怎么拆文件、怎么并发、怎么过滤、怎么质量门。
+
 `internal/agent/` 是 `ocr review` 的顶层指挥官。它**不碰** LLM 单轮调用的细节，专注做四件事：
 
 1. 从 git 拿 diff、解析、过滤；
@@ -13,10 +15,10 @@ LLM 多轮工具调用循环本身被搬到了 `internal/llmloop/`（第 7 章�
 
 | 文件 | 职责 |
 |------|------|
-| `agent.go` | `Agent` 结构、`Run`、`dispatchSubtasks`、`executeSubtask`、`executeReviewFilter` |
-| `preview.go` | `--preview` 模式：只列文件列表，不调 LLM |
-| `estimate.go` | diff 成本估算（`estimateDiffCost` / `estimateDiffFileTokens`） |
-| `util.go` | git branch 检测、`whyExcluded` 过滤规则实现、`buildChangeFilesExcept`、`stripEmptyPlanBlock`、`humanTokens` 等 |
+| `agent.go` | `Agent` 结构、`Run`、`dispatchSubtasks`、`executeSubtask`、`executeReviewFilter`、`buildChangeFilesExcept`、`resolveSystemRule`、`filterLargeDiffs` |
+| `preview.go` | `--preview` 模式：`Preview`、`whyExcluded` 过滤规则实现 |
+| `estimate.go` | diff 成本估算（`estimateDiffCost` / `estimateDiffFileTokens` / `humanTokens`） |
+| `util.go` | `stripEmptyPlanBlock`、`stripMarkdownFences`、`buildMessageXML`、`detectGitBranch`、`reviewModeString` 等 |
 
 `agent_test.go` / `coverage_test.go` / `budget_test.go` / `init_test.go` / `smallfiles_test.go` 等是测试。
 
@@ -77,7 +79,7 @@ session.Finalize             写 session_end
 
 ### 6.3.3 `filterDiffs`：三层过滤
 
-`agent.go:887` 的实际算法委派给 `whyExcluded`（`util.go`）：返回 `ExcludeReason` 枚举。逻辑顺序：
+`agent.go:887` 的实际算法委派给 `whyExcluded`（`preview.go:31`）：返回 `ExcludeReason` 枚举。逻辑顺序：
 
 1. IsBinary → 跳过
 2. FileFilter.IsUserExcluded → 跳过（用户 exclude）

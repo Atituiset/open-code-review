@@ -1,5 +1,7 @@
 # 16. viewer：会话回看 Web 服务
 
+> 定位：**进阶级** ｜ 本地 JSONL 只读浏览器 + Host 守卫的安全设计。
+
 `internal/viewer/` 实现 `ocr viewer`：一个本地 Web 服务，把 `~/.opencodereview/sessions/` 下的 JSONL 渲染成可浏览的会话回看 UI。它本质上是"session JSONL 的只读浏览器"。
 
 ## 16.1 文件清单

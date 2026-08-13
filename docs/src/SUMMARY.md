@@ -1,6 +1,7 @@
 # Summary
 
 - [序言](./preface.md)
+- [阅读路径：入门级 vs 进阶级](./reading-path.md)
 
 # 第一部分 — 概览
 

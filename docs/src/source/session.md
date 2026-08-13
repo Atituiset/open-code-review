@@ -1,5 +1,7 @@
 # 12. session：会话持久化与断点续审
 
+> 定位：**进阶级** ｜ JSONL 落盘格式、fingerprint 续审机制；入门级读者看第 29 章即可。
+
 `internal/session/` 把每次审查的完整轨迹写成 JSONL，是 OCR "可调试"、"可续审"、"可 Web 回看"三层共同的基础。
 
 ## 12.1 文件清单
@@ -9,7 +11,7 @@
 | `persist.go` | `jsonlWriter`：一行一条 JSON 记录写盘 |
 | `history.go` | `SessionHistory`：per-session 高层 API，包装 jsonlWriter |
 | `resume.go` | `ResumeState`：重放旧 session JSONL 构建 fingerprint→comments 索引 |
-| `list.go` | `ocr session list`/`show`/`remove` 实现 |
+| `list.go` | `ocr session list`/`show` 实现（`ListSessions` / `LoadDetail`） |
 | `testing.go` | 测试辅助 |
 
 ## 12.2 落盘位置与格式
@@ -69,7 +71,7 @@ func (h *SessionHistory) Finalize()
 
 ## 12.5 断点续审 = 重放 JSONL → fingerprint 索引
 
-`resume.go:67 LoadResumeState` 流式读旧 session JSONL：
+`resume.go:68 LoadResumeState` 流式读旧 session JSONL：
 
 ```go
 for {
@@ -118,13 +120,13 @@ for _, d := range diffs {
 
 ## 12.7 回看：CLI 触达
 
-`ocr session list` / `ocr session show <id>` 调 `internal/session/list.go` 实现，列表展示所有 session 的元数据。Web 回看走 `ocr viewer`（见第 16 章），它读同一目录的 JSONL 文件，渲染 HTML。
+`ocr session list` / `ocr session show <id>` 调 `internal/session/list.go` 实现（`ListSessions` / `LoadDetail`），列表展示所有 session 的元数据。Web 回看走 `ocr viewer`（见第 16 章），它读同一目录的 JSONL 文件，渲染 HTML。
 
 ## 12.8 实战细节
 
 ### 12.8.1 session 文件持续增长
 
-每条 LLM request/response + tool call 都写盘。一个长 reviewer 一次 review 可能产生数 MB JSONL。`ocr session list` 会扫所有 session 文件，**仓里有几百个旧 session 时会慢慢变慢**。可以周期性 `ocr session remove <id>` 或直接 rm JSONL。
+每条 LLM request/response + tool call 都写盘。一个长 reviewer 一次 review 可能产生数 MB JSONL。`ocr session list` 会扫所有 session 文件，**仓里有几百个旧 session 时会慢慢变慢**。当前 CLI **没有** `ocr session remove` 子命令（只有 `list`/`show`），清理需要直接删除 `~/.opencodereview/sessions/<repo>/<id>.jsonl` 文件。
 
 ### 12.8.2 fingerprint 失效场景
 

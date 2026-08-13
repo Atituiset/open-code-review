@@ -1,5 +1,7 @@
 # 8. Tool：六件套工具体系
 
+> 定位：**进阶级** ｜ 六个内置工具、注册表、评论收集器与工具结果回灌的实现细节。
+
 `internal/tool/` 实现了 OCR 给 LLM 暴露的全部六个内置工具，外加工具注册表、评论收集器、文件读取器抽象。这一把工具集是从大规模生产 trace 里"蒸馏"出来的最小集——OCR 故意不暴露通用 file system / shell / `gh` 类工具，而是只给 LLM 审查代码时真正需要的几件事。
 
 ## 8.1 抽象与注册表
@@ -137,7 +139,7 @@ default:       return tool.Of("Error: invalid task_done state")
 
 LLM 看到的工具结果字符串：
 
-- `code_comment` 给回 `"Comments submitted successfully."`（`tool.CommentSucceed`）
+- `code_comment` 给回 `"Successfully commented."`（`tool.CommentSucceed`，定义在 `response_message.go:26`）
 - 其它工具给回 `result string`（`tool.Of(result)`）
 - 工具未注册 → `"Error: Tool not found. The tool you attempted to call does not exist or is not available. Please check the tool name and try again with a valid tool."`（`NotAvailableMsg`）——这一类"温和错误回执"是为了让 LLM 自己 adapt，而不是故障停止。
 

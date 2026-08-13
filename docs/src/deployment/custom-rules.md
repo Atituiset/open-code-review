@@ -1,5 +1,7 @@
 # 25. 自定义审查规则
 
+> 定位：**入门级** ｜ rule.json 四层 + include/exclude + merge_system_rule。
+
 ## 25.1 规则体系的 4 层
 
 ```
@@ -85,7 +87,7 @@ ocr review --rule /tmp/special-rules.json --from main --to feature
 
 ## 25.6 系统内置规则（默认值）
 
-`internal/config/rules/rule_docs/*.md` 是 33 个语言/技术专属规则，全在二进制里：
+`internal/config/rules/rule_docs/*.md` 是 32 个语言/技术专属规则（含 `default.md`），全在二进制里：
 
 | 文件 | 覆盖 | 内容要点 |
 |------|------|---------|

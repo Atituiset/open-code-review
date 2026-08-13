@@ -1,5 +1,7 @@
 # 27. 编程代理集成（Claude Code / Codex / Cursor / OpenCode）
 
+> 定位：**入门级** ｜ 4 个代理插件 + 两种 LLM 执行模型。
+
 OCR 除了 CLI 和 CI，还有 4 个编程代理的插件：**Claude Code / Codex / Cursor / OpenCode**。它们的共同点：把 `ocr review` 变成 IDE 里可调用的 slash command / skill / tool。这在"让开发者审自己的分支"场景特别有用。
 
 ## 27.1 总览

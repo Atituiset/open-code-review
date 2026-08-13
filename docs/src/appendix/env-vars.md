@@ -1,5 +1,7 @@
 # B. 环境变量总览
 
+> 定位：**全水平（速查）** ｜ OCR 自身 + provider key 回退 + Claude Code 兼容 + OTel。
+
 ## B.1 OCR 自身
 
 | 变量 | 作用 | 出处 |

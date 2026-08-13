@@ -1,5 +1,7 @@
 # 15. MCP 客户端扩展
 
+> 定位：**进阶级** ｜ 接外部 MCP server、注册进工具注册表、stdio/remote 两种 transport。
+
 `internal/mcp/` 让 OCR 作为 **MCP 客户端**（不是 server）去连外部 MCP server，把 server 暴露的工具注册进 OCR 的工具注册表，从而让 review Agent 能用**你自己定义的任何工具**——比如查内部工单、读部署平台状态、搜私有知识库。
 
 ## 15.1 文件清单
@@ -47,7 +49,7 @@ transport := &mcp.StreamableClientTransport{Endpoint: url, HTTPClient: httpClien
 ```
 
 - **header 环境变量展开**：`Authorization: "Bearer $MY_TOKEN"` → 展开 `MY_TOKEN`。空值直接报错，防止"静默发空 token"。
-- `headerTransport.RoundTrip` 特殊处理 401/403，把 MCP server 的认证错误转成可读的 Go error（`client.go:139`）。
+- `headerTransport.RoundTrip` 特殊处理 401/403，把 MCP server 的认证错误转成可读的 Go error（`client.go:129`）。
 - 用官方 Streamable HTTP transport 连远程 MCP 服务器。
 
 ## 15.3 `RegisterAll`：工具桥

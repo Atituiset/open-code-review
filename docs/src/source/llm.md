@@ -1,5 +1,7 @@
 # 5. LLM 客户端与多协议抽象
 
+> 定位：**进阶级** ｜ 协议抽象、token 计数、endpoint 解析与错误重试的实现细节。
+
 `internal/llm/` 是 OCR 的"网卡层"：它把三家协议、HTTP 细节、token 计算、缓存控制、SDK 错误重试都收敛在一个接口 `LLMClient` 后面，让上层 `llmloop.Runner` 完全不必关心不同 SDK 的协议差异。
 
 ## 5.1 一图看懂三层
@@ -53,7 +55,7 @@ type ChatResponse struct {
 
 - 用官方 SDK `github.com/openai/openai-go/v3`，`WithMaxRetries(5)` + `WithRequestTimeout(cfg.Timeout)`，默认 5 分钟。
 - **URL 后缀补齐**：如果给的 URL 不以 `/chat/completions` 结尾，自动补一次（`client.go:305`）；再把 `/chat/completions` 剥掉作为 baseURL 传 SDK。所以 `OCR_LLM_URL=https://api.openai.com/v1`、`=https://api.openai.com/v1/chat/completions` 都能用。
-- 支持 `extra_body.stream=true` 切流式（`completionsStreaming`），用 SDK accumulator 拼装；流式时特别处理 `reasoning_content` 这种非标字段（多为 DeepSeek-R1 系模型用）。
+- 支持 `extra_body.stream=true` 切流式（`completionsStreaming`，`client.go:363`），用 SDK accumulator 拼装；流式时特别处理 `reasoning_content` 这种非标字段（多为 DeepSeek-R1 系模型用）。
 - tool_call 序列化：`asst.ToolCalls = append(..., openai.ChatCompletionMessageFunctionToolCallParam{ID, Function{Name, Arguments}})`。
 
 ### AnthropicClient（`client.go:567-856`）
@@ -62,8 +64,8 @@ type ChatResponse struct {
 - URL 后缀补 `/v1/messages`。**auth header 三态**：`authorization` → `WithAuthToken`，`x-api-key` → `WithAPIKey`，其它 → 自定义 header。`NormalizeAuthHeader`（`protocol.go`）把大小写差异吸收掉。
 - **system blocks + tools 强制带 `cache_control: ephemeral`**（`client.go:748/752`）——这是 Anthropic prompt caching 的关键，使大 system prompt 和工具 schema 命中缓存，省 token 又省延迟。
 - **tool_use ↔ tool_call 翻译**：
-  - 输入侧 `buildAnthropicParams:695`：`anthropic.NewToolUseBlock(tc.ID, argsMap, tc.Function.Name)`，`argsMap` 是 `json.Unmarshal(arguments)` 得到的；并 guard `arguments=null` 变成 `map[string]any{}`（`#382` bugfix）。
-  - 输出侧 `mapAnthropicResponse:792`：`block.Type == "tool_use"` → `ToolCall{ID: block.ID, Function.Name: block.Name, Arguments: string(block.Input)}`。
+  - 输入侧 `buildAnthropicParams:647`：`anthropic.NewToolUseBlock(tc.ID, argsMap, tc.Function.Name)`，`argsMap` 是 `json.Unmarshal(arguments)` 得到的；并 guard `arguments=null` 变成 `map[string]any{}`（`#382` bugfix）。
+  - 输出侧 `mapAnthropicResponse:787`：`block.Type == "tool_use"` → `ToolCall{ID: block.ID, Function.Name: block.Name, Arguments: string(block.Input)}`。
 - `usage` 把 `input_tokens + cache_read_input_tokens + cache_creation_input_tokens` 都算入 `PromptTokens`，并把后两者单独存进 `CacheReadTokens` / `CacheWriteTokens`——上层 `Runner.TotalTokensUsed()` 因此准确反映**包含缓存的真实消耗**。
 - `thinking` block 被收集到 `ReasoningContent`，最终通过 `ChatResponse.Content()` 只在文本空时回退显示（`client.go:150`）。
 - `stripThinkTags` 用 byte-构造法剥离 `` 标签（兼容 DeepSeek 等"思考模式"包装）。

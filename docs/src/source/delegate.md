@@ -1,5 +1,7 @@
 # 11. delegate：委派模式（无 LLM）
 
+> 定位：**进阶级** ｜ 唯一不调 LLM 的路径，理解它的价值在「借 OCR 的确定性工程给宿主 Agent」。
+
 `internal/delegate/` 是 OCR 设计上"反直觉"的一支：**OCR 调用一次 LLM 都不调用**，只生成一份"审查规约 spec"丢给宿主 Agent（Claude Code / Codex / Cursor / Open Code）让它用自己的 LLM 跑审查。OCR 这边贡献的是确定的 file selection + rule resolution 工程模块；宿主贡献的是它自己的 LLM。
 
 这个模式在落地层非常有用——见第 27 章。
