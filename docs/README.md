@@ -14,7 +14,7 @@ docs/
 │   ├── flow/        # 端到端流程追踪
 │   ├── deployment/  # 落地指南
 │   ├── pitfalls/    # 坑点与最佳实践
-│   └── appendix/    # 附录（文件树、env、flags、术语）
+│   └── appendix/    # 附录（文件树、env、flags、术语、benchmark 核查）
 └── book/            # 构建产物（已 gitignore，不提交）
 ```
 

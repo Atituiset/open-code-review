@@ -59,3 +59,4 @@
 - [B. 环境变量总览](./appendix/env-vars.md)
 - [C. CLI 标志总览](./appendix/flags.md)
 - [D. 术语表](./appendix/glossary.md)
+- [E. benchmark 的外部核查与质疑时间线](./appendix/benchmark.md)
