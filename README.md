@@ -5,6 +5,8 @@
   <h1>OpenCodeReview</h1>
 </div>
 
+> 📖 源码级解读（GitHub Pages）：<https://atituiset.github.io/open-code-review/>
+
 <p align="center">
   <a href="https://trendshift.io/repositories/41087?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-41087" target="_blank" rel="noopener noreferrer">
     <img src="https://trendshift.io/api/badge/repositories/41087" alt="alibaba%2Fopen-code-review | Trendshift" style="width: 280px; height: 60px;" width="280" height="60" />
