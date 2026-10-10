@@ -93,7 +93,7 @@ executeSubtask(ctx, it model.ScanItem):
   runner.RunPerFile(ctx, messages, it.Path)              // ③ 核心 agent loop
 ```
 
-`renderMessages`（`agent.go:904`）把 scan MAIN_TASK 模板的 5 个占位符 `{{current_file_path}}` / `{{system_rule}}` / `{{file_content}}` / `{{plan_guidance}}` / `{{requirement_background}}` 全替换。注意 `{{change_files}}` 在 scan 里被替换成 `"(not applicable in full-scan mode)"`，因为 scan 没有其它改文件概念。
+`renderMessages`（`agent.go:904`）把 scan MAIN_TASK 模板的 5 个占位符 <code v-pre>{{current_file_path}}</code> / <code v-pre>{{system_rule}}</code> / <code v-pre>{{file_content}}</code> / <code v-pre>{{plan_guidance}}</code> / <code v-pre>{{requirement_background}}</code> 全替换。注意 <code v-pre>{{change_files}}</code> 在 scan 里被替换成 `"(not applicable in full-scan mode)"`，因为 scan 没有其它改文件概念。
 
 ## 10.6 `maybeRunPlan` 输出格式
 

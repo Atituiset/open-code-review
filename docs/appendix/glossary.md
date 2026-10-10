@@ -9,7 +9,7 @@
 
 ## B
 
-- **Background（业务背景）**：`--background` / `--background-file` 提供的上下文，注入 prompt 的 `{{requirement_background}}`。
+- **Background（业务背景）**：`--background` / `--background-file` 提供的上下文，注入 prompt 的 <code v-pre>{{requirement_background}}</code>。
 - **Batch（批）**：scan 模式的调度单位，按策略把文件分组，batch 内文件并发、batch 之间串行。
 
 ## C
@@ -57,7 +57,7 @@
 ## P
 
 - **plan phase**：大文件（≥50 行变更）先让 LLM 出 JSON 审查计划，注入 main 阶段。
-- **plan_guidance**：plan 阶段输出，替换 prompt 的 `{{plan_guidance}}`。
+- **plan_guidance**：plan 阶段输出，替换 prompt 的 <code v-pre>{{plan_guidance}}</code>。
 - **Provider**：① `tool.Provider` 工具接口；② `diff.Provider` diff 获取器；③ LLM provider 预设（18 个）。
 - **prompt cache**：Anthropic `cache_control: ephemeral`，OCR 自动给 system+tools 开。
 

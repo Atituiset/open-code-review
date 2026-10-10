@@ -146,7 +146,7 @@ steps:
 2. **锁 OCR 版本**：`@latest` 会滚动，prompt/工具集变化会导致评论风格漂移。CI 锁版本，本地可升级。
 3. **并发去重**：多 job 触发（push+PR）会并发审同一 diff，浪费 token。用 GitLab `resource_group` 或 GitHub `concurrency`。
 4. **`llm_use_anthropic` 用布尔判断协议**：GitHub Action 的 `llm_use_anthropic: 'false'` 会设 `OCR_LLM_USE_ANTHROPIC=false`。有些网关（DashScope 等）只认 OpenAI 协议，别设反。
-5. **`thinking` 模型**：若你的模型默认开 thinking 且消费高，加 `extra_body: {"thinking":{"type":"disabled"}}`（只走 config set，无 env 通道）。
+5. **`thinking` 模型**：若你的模型默认开 thinking 且消费高，加 <code v-pre>extra_body: {"thinking":{"type":"disabled"}}</code>（只走 config set，无 env 通道）。
 6. **评论区限流**：一次性贴 100+ inline comments 可能触发平台限制。用 `route_severity_below` 分流或 `incremental` 增量模式。
 7. **fork PR 的 secrets**：`pull_request_target` 用 repo secrets（安全），但 head 分支代码不可信——OCR 只审 diff 不执行 head 代码，相对安全。但 post-review 脚本要防头注入（只读 diff 文本）。
 8. **`--audience agent` 忘加**：不加的话 stdout 会混入 `[ocr]` 进度行，`--format json` 也救不回（静音机制靠 audience）。**CI 里两个都要**。

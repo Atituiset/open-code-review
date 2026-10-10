@@ -17,7 +17,7 @@
 | `--format` / `-f` | text | `text` 或 `json`（仅 review/scan） | `addOutputFlags` |
 | `--audience` | human | `human` 或 `agent`（agent=静音进度行，仅 review/scan） | `addOutputFlags` |
 | `--model` | "" | 覆盖 LLM 模型（仅 review/scan） | `addModelFlag` |
-| `--background` / `-b` | "" | 业务上下文（进 {{requirement_background}}） | `addBackgroundFlags` |
+| `--background` / `-b` | "" | 业务上下文（进 &#123;&#123;requirement_background&#125;&#125;） | `addBackgroundFlags` |
 | `--background-file` / `-B` | "" | 从文件读业务上下文 | `addBackgroundFlags` |
 | `--preview` / `-p` | false | 只列文件/范围，不调 LLM（仅 review/scan） | `addPreviewFlag` |
 | `--tools` | embed | 自定义 tools.json 路径（仅 review/scan） | `addToolsFlag` |

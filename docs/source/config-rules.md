@@ -177,7 +177,7 @@ protocol 三态：`anthropic` / `openai` / `openai-responses`。
 - `ts_js_tsx_jsx.md`：React hooks 规则、`===`、`Promise.all`、XSS。
 - `default.md`：fallback 通用类，Correctness / Security / Performance / Maintainability / Test 5 段。
 
-这些 markdown 文本最终通过 `{{system_rule}}` 占位符注入 LLM 的 main_task_user / plan_task_user 提示词。
+这些 markdown 文本最终通过 <code v-pre>{{system_rule}}</code> 占位符注入 LLM 的 main_task_user / plan_task_user 提示词。
 
 ## 13.8 Allowlist：扩展名白名单 + 默认排除
 

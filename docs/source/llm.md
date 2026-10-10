@@ -56,7 +56,7 @@ type ChatResponse struct {
 - 用官方 SDK `github.com/openai/openai-go/v3`，`WithMaxRetries(5)` + `WithRequestTimeout(cfg.Timeout)`，默认 5 分钟。
 - **URL 后缀补齐**：如果给的 URL 不以 `/chat/completions` 结尾，自动补一次（`client.go:305`）；再把 `/chat/completions` 剥掉作为 baseURL 传 SDK。所以 `OCR_LLM_URL=https://api.openai.com/v1`、`=https://api.openai.com/v1/chat/completions` 都能用。
 - 支持 `extra_body.stream=true` 切流式（`completionsStreaming`，`client.go:363`），用 SDK accumulator 拼装；流式时特别处理 `reasoning_content` 这种非标字段（多为 DeepSeek-R1 系模型用）。
-- tool_call 序列化：`asst.ToolCalls = append(..., openai.ChatCompletionMessageFunctionToolCallParam{ID, Function{Name, Arguments}})`。
+- tool_call 序列化：<code v-pre>asst.ToolCalls = append(..., openai.ChatCompletionMessageFunctionToolCallParam{ID, Function{Name, Arguments}})</code>。
 
 ### AnthropicClient（`client.go:567-856`）
 

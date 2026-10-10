@@ -89,7 +89,7 @@ session.Finalize             写 session_end
 
 ### 6.3.4 `filterLargeDiffs`：token 预过滤
 
-`agent.go:840`：单文件 diff 自身 token > `PromptTokenLimit(MaxTokens)`（即 80%）就丢，因为加 system+规则+plan 后必然超 MaxTokens。这里用的是 `llm.CountTokens(d.Diff)` 的本地 tiktoken 估算。被丢掉的会 warning 出 "[ocr] Skipping <path> (~{n} tokens exceeds 80% of max_tokens(58888))"。
+`agent.go:840`：单文件 diff 自身 token > `PromptTokenLimit(MaxTokens)`（即 80%）就丢，因为加 system+规则+plan 后必然超 MaxTokens。这里用的是 `llm.CountTokens(d.Diff)` 的本地 tiktoken 估算。被丢掉的会 warning 出 `"[ocr] Skipping <path> (~{n} tokens exceeds 80% of max_tokens(58888))"`。
 
 ### 6.3.5 预算 gate 与 `estimateDiffCost`
 
@@ -166,11 +166,11 @@ executeSubtask(ctx, d) (completed bool, skipReason, err):
      - executeReviewFilter(ctx, d, newPath)
 ```
 
-`stripEmptyPlanBlock`（`util.go`）的细节：当 plan 为空时，把 prompt 里的 `### Review Plan (Optional)\n…\n\n` 包装也一并去掉，避免空标题泄漏到模型——但**必须**在 `ReplaceAll("{{plan_guidance}}", planResult)` 之前做，因为 regex 依赖占位符还在。这是个微妙的代码顺序约束，写 review 看到要特别注意。
+`stripEmptyPlanBlock`（`util.go`）的细节：当 plan 为空时，把 prompt 里的 `### Review Plan (Optional)\n…\n\n` 包装也一并去掉，避免空标题泄漏到模型——但**必须**在 <code v-pre>ReplaceAll("{{plan_guidance}}", planResult)</code> 之前做，因为 regex 依赖占位符还在。这是个微妙的代码顺序约束，写 review 看到要特别注意。
 
 ### `resolveSystemRule` 的细节
 
-`agent.go:832` 直接调 `a.args.SystemRule.Resolve(path)`。`SystemRule` 实现了 4 层 composed resolver（见第 13 章），返回的是**规则 markdown 文本**（一次性把 `rule_docs/*.md` 的内容读出来填进 PathRule Rule 字段，见 `rules/system_rules.go:96 LoadDefault`）。文本最终被替换进 `{{system_rule}}` 占位符。
+`agent.go:832` 直接调 `a.args.SystemRule.Resolve(path)`。`SystemRule` 实现了 4 层 composed resolver（见第 13 章），返回的是**规则 markdown 文本**（一次性把 `rule_docs/*.md` 的内容读出来填进 PathRule Rule 字段，见 `rules/system_rules.go:96 LoadDefault`）。文本最终被替换进 <code v-pre>{{system_rule}}</code> 占位符。
 
 ## 6.6 `executeReviewFilter`：保留可证伪，剔可疑
 

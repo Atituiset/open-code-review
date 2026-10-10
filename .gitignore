@@ -45,5 +45,7 @@ bin/opencodereview
 __pycache__/
 *.py[cod]
 
-# mdBook build output
-docs/book/
+# VitePress build output
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/node_modules/

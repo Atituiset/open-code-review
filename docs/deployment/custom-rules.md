@@ -101,7 +101,7 @@ ocr review --rule /tmp/special-rules.json --from main --to feature
 
 ## 25.7 规则影响范围：只进 prompt
 
-规则文本通过 `{{system_rule}}` 占位符注入每文件的 main_task_user / plan_task_user prompt。它**只影响 LLM 注意力**，不改变 OCR 的工程行为（文件选择/定位/过滤）。所以：
+规则文本通过 <code v-pre>{{system_rule}}</code> 占位符注入每文件的 main_task_user / plan_task_user prompt。它**只影响 LLM 注意力**，不改变 OCR 的工程行为（文件选择/定位/过滤）。所以：
 
 - 想让某类文件被审 → 改 `include`（工程层）。
 - 想让 LLM 关注某类问题 → 改 `rule`（prompt 层）。

@@ -8,10 +8,10 @@
 
 OCR 用的不是 Go `text/template`，而是简单的 `strings.ReplaceAll` 替换。两种占位符：
 
-- **双花括号** `{{name}}`：大多数提示词用。
+- **双花括号** <code v-pre>{{name}}</code>：大多数提示词用。
 - **单花括号** `{name}`：`re_location_task_user.md` 用（这个 prompt 设计初期走过单独路径，留了不一致的语法）。
 
-替换在 `agent.executeSubtask`（`agent.go:622`）和 `scan.renderMessages`（`scan/agent.go:904`）里逐字 `strings.ReplaceAll(content, "{{...}}", value)`。
+替换在 `agent.executeSubtask`（`agent.go:622`）和 `scan.renderMessages`（`scan/agent.go:904`）里逐字 <code v-pre>strings.ReplaceAll(content, "{{...}}", value)</code>。
 
 ## 14.2 diff-review 的五个 prompt 剖析
 
@@ -54,7 +54,7 @@ Current time in the real world: {{current_system_date_time}}
 {{plan_guidance}}                  ← 来自 PLAN_TASK 的 JSON 渲染 markdown
 ```
 
-注：`{{plan_guidance}}` 为空时 `stripEmptyPlanBlock` 把 `"### Review Plan (Optional)"` 标题一起去掉。
+注：<code v-pre>{{plan_guidance}}</code> 为空时 `stripEmptyPlanBlock` 把 `"### Review Plan (Optional)"` 标题一起去掉。
 
 ### 14.2.3 `plan_task_system.md`（37 行）
 
@@ -63,13 +63,13 @@ PLAN_TASK 的 system：
 - 角色：planner。
 - 输出强约束：单一 JSON 对象 `{change_summary, items: [{severity, description, tool_guidance[]}], sort: high→low}`。
 - severity 定义：`high`=安全/数据丢失、`medium`=性能/可维护、`low`=风格。
-- `{{plan_tools}}` 是工具列表描述（reference only，模型被告知"不要调"，只看 description 决定 main 阶段怎么用）。
+- <code v-pre>{{plan_tools}}</code> 是工具列表描述（reference only，模型被告知"不要调"，只看 description 决定 main 阶段怎么用）。
 
 只在 main_task **之前**触发一次（diff 变更行 ≥50）。失败时 OCR **不阻断**（planResult=""）。
 
 ### 14.2.4 `plan_task_user.md`
 
-含 `{{change_files}}`、`{{current_file_path}}`、`{{diff}}`、`{{current_system_date_time}}`、`{{requirement_background}}`、`{{system_rule}}`。结尾 "Start with ```json"。
+含 <code v-pre>{{change_files}}</code>、<code v-pre>{{current_file_path}}</code>、<code v-pre>{{diff}}</code>、<code v-pre>{{current_system_date_time}}</code>、<code v-pre>{{requirement_background}}</code>、<code v-pre>{{system_rule}}</code>。结尾 "Start with ```json"。
 
 ### 14.2.5 `review_filter_task_system.md` + `_user.md`
 
@@ -85,7 +85,7 @@ PLAN_TASK 的 system：
 2. Step 2 Issue Classification："Does it misidentify normal code as a defect?"
 3. 输出 JSON 数组如 `["c-3","c-7"]`，其它评论保留。
 
-`{{path}}`、`{{diff}}`（fenced block + path header）、`{{comments}}`（JSON 列表含 c-0..c-N id/content/existing_code）。
+<code v-pre>{{path}}</code>、<code v-pre>{{diff}}</code>（fenced block + path header）、<code v-pre>{{comments}}</code>（JSON 列表含 c-0..c-N id/content/existing_code）。
 
 ### 14.2.6 `re_location_task_system.md` + `_user.md`
 
@@ -112,7 +112,7 @@ PLAN_TASK 的 system：
 
 规则：空维度不写，**types/paths 描述但不复制代码**，避免泄露源码进入摘要。
 
-User 是 `{{context}}\n`（12 字节）——把整个压缩区的 messages XML 化塞进去。`buildMessageXML`（`compression.go:183`）做这个：
+User 是 <code v-pre>{{context}}\n</code>（12 字节）——把整个压缩区的 messages XML 化塞进去。`buildMessageXML`（`compression.go:183`）做这个：
 
 ```
 <message id="0" role="system">
@@ -166,8 +166,8 @@ scan 的 MAIN_TASK system prompt 显式强调：
 
 OCR **不**开放 task_template.json 的运行期覆盖。如果你想改 main_task 的 prompt 内容，几条路：
 
-1. **走 `--background`**：在 `{{requirement_background}}` 占位符里塞业务上下文。这是 OCR 公开的"加料"渠道，不改 prompt structure。
-2. **走 rule_docs / .opencodereview/rule.json**：把你的特定规则注入 `{{system_rule}}`。这是 OCR 主推的定制方式。
+1. **走 `--background`**：在 <code v-pre>{{requirement_background}}</code> 占位符里塞业务上下文。这是 OCR 公开的"加料"渠道，不改 prompt structure。
+2. **走 rule_docs / .opencodereview/rule.json**：把你的特定规则注入 <code v-pre>{{system_rule}}</code>。这是 OCR 主推的定制方式。
 3. **fork + 改 embed 文件 + 重编译**：改 `internal/config/template/prompts/main_task_user.md`，跑 `make build`。下游升级时手动 rebase 这部分。
 4. **MCP 工具扩展**：见第 15 章，不碰 prompt 只增加工具。
 
